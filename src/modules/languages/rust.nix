@@ -60,10 +60,19 @@ in
       pre-commit.tools.rustfmt = lib.mkForce cfg.packages.rustfmt;
       pre-commit.tools.clippy = lib.mkForce cfg.packages.clippy;
     })
+    # (lib.mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
+    #   env.RUSTFLAGS = [ "-L framework=$DEVENV_PROFILE/Library/Frameworks" ];
+    #   env.RUSTDOCFLAGS = [ "-L framework=$DEVENV_PROFILE/Library/Frameworks" ];
+    #   env.CFLAGS = [ "-iframework $DEVENV_PROFILE/Library/Frameworks" ];
+    # })
     (lib.mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
-      env.RUSTFLAGS = [ "-L framework=${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
-      env.RUSTDOCFLAGS = [ "-L framework=${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
-      env.CFLAGS = [ "-iframework ${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
+      enterShell = lib.concatStringsSep "\n" ([
+        ''
+        export RUSTFLAGS="-L framework=$DEVENV_PROFILE/Library/Frameworks"
+        export RUSTDOCFLAGS="-L framework=$DEVENV_PROFILE/Library/Frameworks"
+        export CFLAGS="-iframework $DEVENV_PROFILE/Library/Frameworks"
+        ''
+      ]);
     })
     (lib.mkIf (cfg.version != null) (
       let
