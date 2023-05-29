@@ -8,7 +8,7 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   inputs.pre-commit-hooks = {
-    url = "github:cachix/pre-commit-hooks.nix";
+    url = "github:ELD/pre-commit-hooks.nix/add-all-features-clippy-opt";
     inputs = {
       nixpkgs.follows = "nixpkgs";
       flake-compat.follows = "flake-compat";
